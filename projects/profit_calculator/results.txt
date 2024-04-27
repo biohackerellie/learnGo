@@ -1,0 +1,3 @@
+Your EBT is: 8.0
+Your profit is: 7.760
+Your EBT to profit ratio is: 1.0
