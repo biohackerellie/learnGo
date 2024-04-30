@@ -1,35 +1,16 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"os"
-	"strconv"
+
+	"epklabs.com/bank/fileops"
+	"github.com/Pallinder/go-randomdata"
 )
 
 const accountBalanceFile = "balance.txt"
 
-func writeBalanceToFile(balance float64) {
-	balanceText := fmt.Sprint(balance)
-	os.WriteFile(accountBalanceFile, []byte(balanceText), 0644)
-}
-
-func getBalanceFromFile() (float64, error) {
-	data, err := os.ReadFile(accountBalanceFile)
-	if err != nil {
-		return 1000, errors.New("There is no file, dumb ass")
-	}
-
-	balanceText := string(data)
-	balance, err := strconv.ParseFloat(balanceText, 64)
-	if err != nil {
-		return 1000, errors.New("Could not parse the fucking file")
-	}
-	return balance, nil
-}
-
 func main() {
-	var accountBalance, err = getBalanceFromFile()
+	var accountBalance, err = fileops.GetFloatFromFile(accountBalanceFile)
 
 	if err != nil {
 		fmt.Println("ERROR")
@@ -39,13 +20,9 @@ func main() {
 	}
 
 	fmt.Print("Welcome to the Bitch Bank!\n")
+	fmt.Println(randomdata.PhoneNumber())
 	for {
-		fmt.Println("What do you want to do? bitch")
-		fmt.Println("1. Check blance")
-		fmt.Println("2. Deposit money")
-		fmt.Println("3. withdrawl money")
-		fmt.Println("4. Exit")
-
+		presentOptions()
 		var choice int
 		fmt.Print("Your choice: ")
 		fmt.Scan(&choice)
@@ -64,7 +41,7 @@ func main() {
 			}
 			accountBalance += depositAmount
 			fmt.Println("Balance updated! New amount: ", accountBalance, "so rich!")
-			writeBalanceToFile(accountBalance)
+			fileops.WriteFloatToFile(accountBalance, accountBalanceFile)
 		case 3:
 			fmt.Print("How much do you need, bitch: ")
 			var withdrawalAmount float64
@@ -80,7 +57,7 @@ func main() {
 			}
 			accountBalance -= withdrawalAmount
 			fmt.Println("Ouch, your new balance is: ", accountBalance)
-			writeBalanceToFile(accountBalance)
+			fileops.WriteFloatToFile(accountBalance, accountBalanceFile)
 		default:
 			fmt.Println("Bye bitch!")
 			fmt.Println("Thanks for choosing the bitch bank, bitch!")
